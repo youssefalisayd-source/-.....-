@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y_EDUX | الاختبار التفاعلي — الاستدامة المهنية والسلوك التنظيمي</title>
+<style>
+/*
+ * _base.css — Global design tokens, element defaults, page shell, and tiny utilities.
+ * ALWAYS included in every page.
+ *
+ * Provides:
+ *   :root variables (light + dark), box-sizing, html/body,
+ *   element defaults (button, input, select, textarea, label, fieldset, legend,
+ *   a, hr, img, h1-h4, p, ul/ol/li, blockquote, table/th/td, details/summary,
+ *   pre/code), main / .notion-shell, utility classes, .notion-footer,
+ *   reduced-motion and responsive breakpoints for base elements.
+ */
+
+:root {
+	color-scheme: light dark;
+	--notion-bg: #ffffff;
+	--notion-bg-soft: #f9f9f8;
+	--notion-surface: #ffffff;
+	--notion-surface-hover: #f6f5f4;
+	--notion-text: #191918;
+	--notion-text-soft: rgba(0, 0, 0, 0.54);
+	--notion-text-faint: rgba(0, 0, 0, 0.3);
+	--notion-border: rgba(0, 0, 0, 0.1);
+	--notion-border-soft: rgba(0, 0, 0, 0.05);
+	--notion-shadow:
+		0px 0.7px 1.462px rgba(0, 0, 0, 0.015), 0px 3px 9px rgba(0, 0, 0, 0.03);
+	--notion-blue: #2783de;
+	--notion-orange: #d5803b;
+	--notion-red: #e56458;
+	--notion-blue-bg: #f3f9fd;
+	--notion-yellow-bg: #fcfaef;
+	--notion-orange-bg: #fcf7f4;
+	--notion-green-bg: #f6f9f7;
+	--notion-red-bg: #fdf6f6;
+	--notion-gray-bg: #f9f8f7;
+	--notion-radius: 8px;
+	--notion-page-width: 900px;
+	--notion-chart-1: #5e9fe8;
+	--notion-chart-2: #eac26b;
+	--notion-chart-3: #72bc8f;
+	--notion-chart-4: #bf8eda;
+	--notion-chart-5: #de9255;
+	--notion-chart-6: #df84a8;
+	--notion-chart-7: #4fb9c9;
+	--notion-chart-8: #e97366;
+	--diff-add: #47c1b6;
+	--diff-del: #f07070;
+	--pr-approved: #2b8a3e;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--notion-bg: #000000;
+		--notion-bg-soft: #191918;
+		--notion-surface: #191918;
+		--notion-surface-hover: #31302e;
+		--notion-text: #ffffff;
+		--notion-text-soft: rgba(255, 255, 255, 0.5);
+		--notion-text-faint: rgba(255, 255, 255, 0.3);
+		--notion-border: rgba(255, 255, 255, 0.2);
+		--notion-border-soft: rgba(255, 255, 255, 0.1);
+		--notion-shadow:
+			0px 0.7px 1.462px rgba(0, 0, 0, 0.06), 0px 3px 9px rgba(0, 0, 0, 0.12);
+		--notion-blue: #5e9fe8;
+		--notion-orange: #de9255;
+		--notion-red: #e97366;
+		--notion-blue-bg: rgba(41, 139, 253, 0.061);
+		--notion-yellow-bg: rgba(203, 145, 47, 0.08);
+		--notion-orange-bg: rgba(246, 126, 35, 0.08);
+		--notion-green-bg: rgba(42, 157, 118, 0.08);
+		--notion-red-bg: rgba(246, 73, 50, 0.08);
+		--notion-gray-bg: #31302e;
+		--diff-add: #5dd8cb;
+		--diff-del: #ff8a80;
+		--pr-approved: #69db7c;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+html {
+	scroll-behavior: smooth;
+}
+body {
+	margin: 0;
+	background: var(--notion-bg);
+	color: var(--notion-text);
+	font-family:
+		ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+		"Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+	font-size: 16px;
+	line-height: 1.5;
+	transition:
+		background 180ms ease,
+		color 180ms ease;
+}
+
+/* -- Base element defaults -------------------------------- */
+button,
+[type="button"],
+[type="submit"],
+[type="reset"] {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 8px 16px;
+	font: inherit;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.2;
+	color: #ffffff;
+	background: var(--notion-blue);
+	border: 1px solid transparent;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background 150ms;
+	white-space: nowrap;
+}
+button:hover,
+[type="button"]:hover,
+[type="submit"]:hover,
+[type="reset"]:hover {
+	background: color-mix(in srgb, var(--notion-blue) 82%, black);
+}
+button:focus-visible,
+[type="button"]:focus-visible,
+[type="submit"]:focus-visible,
+[type="reset"]:focus-visible {
+	outline: 2px solid var(--notion-blue);
+	outline-offset: 2px;
+}
+
+input,
+select,
+textarea {
+	font: inherit;
+	font-size: 14px;
+	line-height: 1.4;
+	color: var(--notion-text);
+	background: var(--notion-surface);
+	border: 1px solid var(--notion-border);
+	border-radius: 8px;
+	padding: 8px 12px;
+	transition: border-color 150ms;
+}
+input:focus,
+select:focus,
+textarea:focus {
+	outline: none;
+	border-color: var(--notion-blue);
+	box-shadow: 0 0 0 2px rgba(9, 127, 232, 0.15);
+}
+input::placeholder,
+textarea::placeholder {
+	color: var(--notion-text-faint);
+}
+select {
+	appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' fill='none' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+	padding-right: 30px;
+}
+textarea {
+	resize: vertical;
+	min-height: 80px;
+}
+input[type="range"] {
+	border: none;
+	padding: 0;
+	background: transparent;
+	accent-color: var(--notion-blue);
+	height: 18px;
+	cursor: pointer;
+	box-shadow: none;
+}
+input[type="range"]:focus {
+	box-shadow: none;
+}
+input[type="checkbox"],
+input[type="radio"] {
+	width: 16px;
+	height: 16px;
+	accent-color: var(--notion-blue);
+	border: 1px solid var(--notion-border);
+	padding: 0;
+	cursor: pointer;
+}
+label {
+	display: block;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--notion-text);
+	margin-bottom: 6px;
+}
+fieldset {
+	border: 1px solid var(--notion-border-soft);
+	border-radius: 10px;
+	padding: 16px;
+	margin: 0;
+}
+legend {
+	font-weight: 600;
+	padding: 0 4px;
+}
+
+a {
+	color: var(--notion-text);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	text-decoration-color: var(--notion-border);
+}
+a:hover {
+	text-decoration-color: var(--notion-text);
+}
+
+hr {
+	height: 1px;
+	margin: 34px 0;
+	border: none;
+	background: var(--notion-border-soft);
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	text-wrap: balance;
+}
+h1 {
+	margin: 0 0 14px;
+	font-size: clamp(42px, 7vw, 72px);
+	line-height: 1.1;
+	letter-spacing: -0.035em;
+	font-weight: 700;
+}
+h2 {
+	margin: 44px 0 10px;
+	font-size: 32px;
+	line-height: 1.25;
+	letter-spacing: -0.025em;
+}
+h3 {
+	margin: 0 0 6px;
+	font-size: 18px;
+	line-height: 1.556;
+	letter-spacing: -0.007em;
+}
+p {
+	margin: 0 0 10px;
+}
+
+ul,
+ol {
+	margin: 8px 0 16px;
+	padding-left: 24px;
+}
+li {
+	margin-bottom: 4px;
+}
+li::marker {
+	color: var(--notion-text-faint);
+}
+
+blockquote {
+	border-left: 3px solid var(--notion-text);
+	padding: 4px 0 4px 16px;
+	margin: 24px 0;
+}
+blockquote p {
+	font-size: 18px;
+	line-height: 1.5;
+	margin: 0;
+}
+
+table {
+	width: 100%;
+	margin: 14px 0;
+	border-collapse: separate;
+	border-spacing: 0;
+	border: 1px solid var(--notion-border-soft);
+	border-radius: 10px;
+	overflow: hidden;
+	background: var(--notion-surface);
+	font-size: 14px;
+}
+th,
+td {
+	padding: 12px 14px;
+	vertical-align: top;
+	text-align: left;
+	border-right: 1px solid var(--notion-border-soft);
+	border-bottom: 1px solid var(--notion-border-soft);
+}
+th:last-child,
+td:last-child {
+	border-right: 0;
+}
+tr:last-child td {
+	border-bottom: 0;
+}
+th {
+	background: var(--notion-bg-soft);
+	color: var(--notion-text-soft);
+	font-weight: 600;
+}
+
+details {
+	margin: 16px 0;
+	border-radius: var(--notion-radius);
+}
+summary {
+	padding: 8px 10px;
+	border-radius: var(--notion-radius);
+	cursor: pointer;
+	font-weight: 600;
+}
+summary:hover {
+	background: var(--notion-surface-hover);
+}
+details p {
+	margin: 8px 10px 0 28px;
+	color: var(--notion-text-soft);
+}
+
+pre,
+code {
+	font-family: ui-monospace, "iA Writer Mono", Nitti, Menlo, Courier, monospace;
+}
+pre {
+	margin: 16px 0;
+	padding: 14px 16px;
+	overflow-x: auto;
+	border: 1px solid var(--notion-border-soft);
+	border-radius: 10px;
+	background: var(--notion-gray-bg);
+	font-size: 13px;
+	line-height: 1.55;
+}
+code {
+	font-size: 0.9em;
+	padding: 2px 5px;
+	border-radius: 4px;
+	background: var(--notion-gray-bg);
+}
+pre code {
+	font-size: inherit;
+	padding: 0;
+	border-radius: 0;
+	background: none;
+}
+
+main {
+	max-width: var(--notion-page-width);
+	margin: 0 auto;
+	padding: 76px 24px 88px;
+}
+
+section {
+	margin-top: 44px;
+}
+section:first-child {
+	margin-top: 0;
+}
+
+/* -- Page shell ------------------------------------------- */
+.notion-shell {
+	max-width: var(--notion-page-width);
+	margin: 0 auto;
+	padding: 76px 24px 88px;
+}
+
+/* -- Tiny utilities --------------------------------------- */
+.notion-lede {
+	max-width: 720px;
+	margin: 0 0 24px;
+	color: var(--notion-text-soft);
+	font-size: 20px;
+}
+.notion-muted {
+	color: var(--notion-text-soft);
+}
+.notion-faint {
+	color: var(--notion-text-faint);
+}
+.notion-divider {
+	height: 1px;
+	margin: 34px 0;
+	background: var(--notion-border-soft);
+}
+.notion-eyebrow {
+	display: inline-block;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.0078125rem;
+	text-transform: uppercase;
+	color: var(--notion-blue);
+}
+
+/* -- Footer ----------------------------------------------- */
+.notion-footer {
+	margin-top: 52px;
+	padding-top: 18px;
+	border-top: 1px solid var(--notion-border-soft);
+	color: var(--notion-text-faint);
+	font-size: 13px;
+}
+
+/* -- Accessibility & motion ------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+/* -- Responsive: 560px (base elements) -------------------- */
+@media (max-width: 560px) {
+	main,
+	.notion-shell {
+		padding-inline: 16px;
+	}
+	table {
+		display: block;
+		overflow-x: auto;
+	}
+}
+/*
+ * callout — Highlighted info box with icon and text.
+ * Options: data-tone="blue" | "green" | "orange" | "red" (default: yellow)
+ *
+ * HTML:
+ * <div class="notion-callout" data-tone="blue">
+ *   <div>💡</div>
+ *   <div><strong>Note</strong><p>Helpful context.</p></div>
+ * </div>
+ */
+
+.notion-callout {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 14px;
+	margin: 18px 0;
+	padding: 16px 18px;
+	border-radius: var(--notion-radius);
+	background: var(--notion-yellow-bg);
+	box-shadow: inset 0 0 0 1px var(--notion-border-soft);
+}
+.notion-callout[data-tone="blue"] {
+	background: var(--notion-blue-bg);
+}
+.notion-callout[data-tone="green"] {
+	background: var(--notion-green-bg);
+}
+.notion-callout[data-tone="orange"] {
+	background: var(--notion-orange-bg);
+}
+.notion-callout[data-tone="red"] {
+	background: var(--notion-red-bg);
+}
+.notion-callout strong {
+	display: block;
+	margin-bottom: 3px;
+}
+.notion-callout p {
+	margin: 0;
+	color: var(--notion-text-soft);
+}
+/*
+ * button — Styled link/button with variant and size options.
+ * Options: data-variant="primary"|"secondary"|"tertiary"
+ *          data-size="small"|"large"
+ *
+ * HTML:
+ * <a class="notion-button" data-variant="primary" href="#">Primary</a>
+ */
+
+.notion-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 8px 16px;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.2;
+	border-radius: 8px;
+	border: 1px solid transparent;
+	cursor: pointer;
+	transition:
+		background 150ms,
+		box-shadow 150ms,
+		border-color 150ms;
+	text-decoration: none;
+	font-family: inherit;
+	white-space: nowrap;
+}
+.notion-button:focus-visible {
+	outline: 2px solid var(--notion-blue);
+	outline-offset: 2px;
+}
+/* Primary */
+.notion-button[data-variant="primary"],
+.notion-button:not([data-variant]) {
+	background: var(--notion-blue);
+	color: #ffffff;
+	border-color: transparent;
+}
+.notion-button[data-variant="primary"]:hover,
+.notion-button:not([data-variant]):hover {
+	background: color-mix(in srgb, var(--notion-blue) 82%, black);
+}
+/* Secondary */
+.notion-button[data-variant="secondary"] {
+	background: var(--notion-blue-bg);
+	color: var(--notion-blue);
+	border-color: transparent;
+}
+.notion-button[data-variant="secondary"]:hover {
+	background: color-mix(in srgb, var(--notion-blue-bg) 70%, var(--notion-blue));
+}
+/* Tertiary */
+.notion-button[data-variant="tertiary"] {
+	background: transparent;
+	color: var(--notion-text);
+	border-color: transparent;
+}
+.notion-button[data-variant="tertiary"]:hover {
+	background: var(--notion-surface-hover);
+}
+/* Small modifier */
+.notion-button[data-size="small"] {
+	padding: 4px 12px;
+	font-size: 12px;
+}
+/* Large modifier */
+.notion-button[data-size="large"] {
+	padding: 12px 24px;
+	font-size: 16px;
+}
+.notion-button-group {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 24px;
+}
+
+/* -- Responsive: 820px ------------------------------------ */
+@media (max-width: 820px) {
+	.notion-button-group {
+		flex-direction: column;
+	}
+	.notion-button-group .notion-button {
+		width: 100%;
+	}
+}
+:root{
+  --y-red:#e10600;--y-red-dark:#b00500;--y-black:#0d0d0d;--y-white:#ffffff;
+  --y-gray:#f4f4f5;--y-border:#e4e4e7;--y-green:#15803d;--y-green-bg:#e7f7ed;
+  --y-red-bg:#fdeaea;--y-muted:#6b7280;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Noto Sans Arabic','Segoe UI',Tahoma,sans-serif;background:var(--y-black);color:var(--y-black);line-height:1.7}
+.yx-shell{max-width:860px;margin:0 auto;padding:0 16px 64px}
+/* Header */
+.yx-header{background:var(--y-black);color:#fff;padding:26px 16px 22px;text-align:center;border-bottom:4px solid var(--y-red)}
+.yx-logo{font-size:40px;font-weight:900;letter-spacing:2px}
+.yx-logo .x{color:var(--y-red)}
+.yx-tagline{margin-top:6px;font-size:14px;color:#d4d4d8}
+.yx-tagline a{color:#fff;text-decoration:none;border-bottom:1px dashed var(--y-red)}
+.yx-subject{margin-top:10px;font-size:16px;font-weight:700;color:var(--y-red)}
+/* Page body card */
+.yx-page{background:#fff;border-radius:14px;margin-top:18px;padding:22px;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+/* Warning banner */
+.yx-warn{background:var(--y-red-bg);border:1px solid var(--y-red);border-radius:10px;padding:14px 16px;color:var(--y-black);display:flex;gap:10px;align-items:flex-start;font-weight:600;margin-bottom:18px}
+.yx-warn .i{font-size:20px}
+/* Mode menu */
+.yx-h2{font-size:22px;font-weight:800;margin:6px 0 14px;text-align:center}
+.yx-modes{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:560px){.yx-modes{grid-template-columns:1fr 1fr 1fr}}
+.yx-mode{cursor:pointer;border:2px solid var(--y-border);border-radius:12px;padding:18px 14px;text-align:center;background:#fff;transition:.15s;font-family:inherit}
+.yx-mode:hover{border-color:var(--y-red);transform:translateY(-2px);box-shadow:0 6px 18px rgba(225,6,0,.15)}
+.yx-mode .ic{font-size:30px}
+.yx-mode .tt{font-weight:800;font-size:17px;margin-top:6px}
+.yx-mode .ct{color:var(--y-muted);font-size:13px;margin-top:2px}
+/* Buttons */
+.yx-btn{display:inline-block;cursor:pointer;border:none;font-family:inherit;font-weight:800;font-size:16px;border-radius:10px;padding:12px 26px;background:var(--y-red);color:#fff;transition:.15s}
+.yx-btn:hover{background:var(--y-red-dark)}
+.yx-btn.ghost{background:#fff;color:var(--y-black);border:2px solid var(--y-black)}
+.yx-btn.ghost:hover{background:var(--y-black);color:#fff}
+.yx-btn:disabled{opacity:.4;cursor:not-allowed}
+/* Quiz */
+.yx-bar{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--y-black)}
+.yx-bar .score{color:var(--y-red)}
+.yx-prog{height:8px;background:var(--y-gray);border-radius:99px;overflow:hidden;margin-bottom:18px}
+.yx-prog>div{height:100%;background:var(--y-red);width:0;transition:.3s}
+.yx-q{font-size:19px;font-weight:800;margin-bottom:18px}
+.yx-q .num{color:var(--y-red)}
+.yx-opts{display:flex;flex-direction:column;gap:10px}
+.yx-opt{cursor:pointer;text-align:right;border:2px solid var(--y-border);border-radius:10px;padding:13px 16px;background:#fff;font-family:inherit;font-size:16px;font-weight:600;transition:.12s}
+.yx-opt:hover:not(:disabled){border-color:var(--y-black)}
+.yx-opt:disabled{cursor:default}
+.yx-opt.correct{border-color:var(--y-green);background:var(--y-green-bg);color:var(--y-green)}
+.yx-opt.wrong{border-color:var(--y-red);background:var(--y-red-bg);color:var(--y-red-dark)}
+.yx-opt .mk{font-weight:900;margin-left:8px}
+/* Feedback */
+.yx-fb{margin-top:16px;border-radius:10px;padding:14px 16px;font-weight:600;display:none}
+.yx-fb.show{display:block}
+.yx-fb.ok{background:var(--y-green-bg);border:1px solid var(--y-green);color:var(--y-green)}
+.yx-fb.no{background:var(--y-red-bg);border:1px solid var(--y-red);color:var(--y-red-dark)}
+.yx-fb .hd{font-weight:900;font-size:16px;margin-bottom:6px;display:block}
+.yx-fb .corr{display:block;margin-top:8px;color:var(--y-black);font-weight:700}
+.yx-foot-act{margin-top:20px;display:flex;justify-content:space-between;gap:10px}
+/* Results */
+.yx-res{text-align:center;padding:14px}
+.yx-res .big{font-size:54px;font-weight:900;color:var(--y-red)}
+.yx-res .lbl{color:var(--y-muted);font-weight:700;margin-bottom:4px}
+.yx-res .msg{font-size:18px;font-weight:800;margin:14px 0}
+/* Footer */
+.yx-footer{text-align:center;color:#d4d4d8;font-size:13px;padding:26px 16px 8px}
+.yx-footer strong{color:#fff}
+.yx-footer a{color:#fff;text-decoration:none;font-weight:800;border-bottom:2px solid var(--y-red)}
+.yx-wa{display:inline-flex;align-items:center;gap:6px;margin-top:8px;background:var(--y-red);color:#fff;padding:8px 16px;border-radius:99px;text-decoration:none;font-weight:800}
+.hidden{display:none!important}
+
+/* ===== Overrides to beat bundled _base.css element defaults (button{color:#fff;background:blue;display:inline-flex;white-space:nowrap}) ===== */
+.yx-mode{display:block!important;width:100%;color:var(--y-black)!important;background:#fff!important;white-space:normal!important;text-align:center;font:inherit}
+.yx-mode .ic,.yx-mode .tt,.yx-mode .ct{display:block}
+.yx-opt{display:block!important;width:100%;color:var(--y-black)!important;background:#fff!important;white-space:normal!important;text-align:right;font:inherit;line-height:1.7}
+.yx-opt:hover:not(:disabled){background:#fff!important;border-color:var(--y-black)}
+.yx-opt.correct{color:var(--y-green)!important;background:var(--y-green-bg)!important;border-color:var(--y-green)!important}
+.yx-opt.wrong{color:var(--y-red-dark)!important;background:var(--y-red-bg)!important;border-color:var(--y-red)!important}
+.yx-btn{display:inline-block!important;width:auto;color:#fff!important;background:var(--y-red)!important;white-space:normal!important;font:inherit;font-weight:800}
+.yx-btn:hover{background:var(--y-red-dark)!important}
+.yx-btn.ghost{color:var(--y-black)!important;background:#fff!important;border:2px solid var(--y-black)!important}
+.yx-btn.ghost:hover{color:#fff!important;background:var(--y-black)!important}
+.yx-btn:disabled{opacity:.4}
+.yx-q{display:block;white-space:normal}
+
+</style>
+</head>
+<body>
+<header class="yx-header">
+  <div class="yx-logo">Y_<span class="x">EDUX</span></div>
+  <div class="yx-tagline">من تصميم <strong>Mr. Youssef Ali</strong> · للتواصل واتساب <a href="https://wa.me/201034288343">01034288343</a></div>
+  <div class="yx-subject">الاختبار التفاعلي — الاستدامة المهنية والسلوك التنظيمي</div>
+</header>
+
+<div class="yx-shell">
+  <div class="yx-page">
+
+    <!-- HOME -->
+    <section id="screen-home">
+      <div class="notion-callout yx-warn" data-tone="red">
+        <span class="i">⚠️</span>
+        <span>تنبيه مهم: عند الشك في صحة أي سؤال أو إجابة، ارجع دائمًا إلى المادة العلمية الخاصة بالمادة للتأكد.</span>
+      </div>
+      <h2 class="yx-h2">اختر نوع الاختبار</h2>
+      <div class="yx-modes">
+        <button class="yx-mode" data-mode="mcq" type="button">
+          <div class="ic">📝</div><div class="tt">اختيار من متعدد</div><div class="ct" id="cnt-mcq"></div>
+        </button>
+        <button class="yx-mode" data-mode="tf" type="button">
+          <div class="ic">✔️</div><div class="tt">صح و خطأ</div><div class="ct" id="cnt-tf"></div>
+        </button>
+        <button class="yx-mode" data-mode="all" type="button">
+          <div class="ic">🎯</div><div class="tt">اختبار شامل</div><div class="ct" id="cnt-all"></div>
+        </button>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="screen-quiz" class="hidden">
+      <div class="yx-bar">
+        <span id="q-count"></span>
+        <span class="score" id="q-score"></span>
+      </div>
+      <div class="yx-prog"><div id="q-prog"></div></div>
+      <div class="yx-q" id="q-text"></div>
+      <div class="yx-opts" id="q-opts"></div>
+      <div class="yx-fb" id="q-fb"></div>
+      <div class="yx-foot-act">
+        <button class="yx-btn ghost" id="btn-quit" type="button">إنهاء والخروج</button>
+        <button class="yx-btn notion-button" id="btn-next" type="button" data-variant="primary">السؤال التالي ←</button>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="screen-results" class="hidden">
+      <div class="yx-res">
+        <div class="lbl">نتيجتك</div>
+        <div class="big" id="res-pct"></div>
+        <div class="lbl">الدرجة: <span id="res-score"></span></div>
+        <div class="msg" id="res-msg"></div>
+        <div class="notion-callout yx-warn" data-tone="red" style="justify-content:center">
+          <span class="i">⚠️</span>
+          <span>عند الشك في صحة أي سؤال، ارجع إلى المادة العلمية الخاصة بالمادة.</span>
+        </div>
+        <div class="yx-foot-act" style="justify-content:center;margin-top:18px">
+          <button class="yx-btn ghost" id="btn-home" type="button">القائمة الرئيسية</button>
+          <button class="yx-btn notion-button" id="btn-retry" type="button" data-variant="primary">إعادة الاختبار (ترتيب جديد)</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="yx-footer">
+    <div>منصة <strong>Y_EDUX</strong> — من تصميم <strong>Mr. Youssef Ali</strong></div>
+    <a class="yx-wa" href="https://wa.me/201034288343">📱 واتساب للتواصل: 01034288343</a>
+  </footer>
+</div>
+
+<script>
+window.QUIZ = {
+mcq: [{"q":"يشجّع ........ على تبنّي أسلوب حياة مستدام وفهم الآثار المحتملة للتصرفات الشخصية والمؤسساتية.","o":["التثقيف","الابتكار","التقييم"],"c":0,"w":["التثقيف هو ما يشجّع على تبنّي أسلوب حياة مستدام وفهم آثار التصرفات الشخصية والمؤسساتية.","الابتكار يتعلق بتوليد أفكار وحلول جديدة ولم يرد بمعنى تشجيع أسلوب الحياة المستدام.","التقييم يتعلق بقياس الأداء ولا يطابق معنى تشجيع تبنّي أسلوب الحياة المستدام."]},{"q":"يُقصد بـ ........ فردين أو أكثر من الأفراد المتفاعلين والمعتمدين على بعضهم البعض لتحقيق هدف مشترك.","o":["القيادة","التنظيم","الجماعة"],"c":2,"w":["القيادة عملية تأثير في الآخرين لتحقيق هدف، وليست تعريف فردين متفاعلين معتمدين على بعضهم.","التنظيم ترتيب للموارد والأدوار، ولا يطابق تعريف الأفراد المتفاعلين.","الجماعة = فردان أو أكثر متفاعلون ومعتمدون على بعضهم لتحقيق هدف مشترك."]},{"q":"خطة التنمية المستدامة لعام ٢٠٣٠ تشمل:","o":["١٧ هدفًا","١٦ هدفًا","١٨ هدفًا"],"c":0,"w":["خطة ٢٠٣٠ تتضمن ١٧ هدفًا للتنمية المستدامة.","العدد ١٦ خطأ؛ الأهداف ١٧ لا ١٦.","العدد ١٨ خطأ؛ الأهداف ١٧ لا ١٨."]},{"q":"الاتصال الذي يتم في المنظمات الإدارية المختلفة ويكون خاضعًا للقواعد والقوانين والأنظمة المتبعة داخل المنظمات.","o":["الاتصال المباشر","الاتصال الرسمي","الاتصال غير الرسمي"],"c":1,"w":["الاتصال المباشر يتم وجهًا لوجه ولا يُعرّف بالخضوع للقواعد والأنظمة.","الاتصال الرسمي هو ما يتم داخل المنظمات خاضعًا للقواعد والقوانين والأنظمة.","الاتصال غير الرسمي يقوم على الاعتبارات الشخصية ولا يخضع للقواعد والأنظمة."]},{"q":"كلما كبر حجم الفريق ........ التعاون بين أعضائه.","o":["كلما ازداد","كلما قلّ","لم يتأثر"],"c":1,"w":["العكس؛ فكلما كبر حجم الفريق قلّت المشاركة والتعاون لا أن يزداد.","كلما كبر حجم الفريق قلّ عدد القادرين على المشاركة وقلّ التعاون.","حجم الفريق يؤثر فعلًا في التعاون، فالقول بعدم التأثر خطأ."]},{"q":"هو بُعد يقيس قدرتك على التعبير عن أفكارك وآرائك وأهدافك.","o":["الوضوح","الحضور","الوعي الموقفي"],"c":0,"w":["الوضوح بُعد يقيس قدرتك على التعبير عن أفكارك وآرائك وأهدافك بوضوح.","الحضور يخص بُعد التأثير لا التعبير عن الأفكار.","الوعي الموقفي هو الرادار الاجتماعي لقراءة المواقف لا التعبير عن الأفكار."]},{"q":"هي كافة المصادر الطبيعية والصناعية التي تساهم في دعم نطاق الاستدامة على القيام بدوره.","o":["التكنولوجيا","الموارد","الشفافية"],"c":1,"w":["التكنولوجيا = التأثير العلمي الحديث على طبيعة الحياة، لا المصادر الطبيعية والصناعية.","الموارد = كافة المصادر الطبيعية والصناعية التي تدعم نطاق الاستدامة (هذا هو التعريف).","الشفافية = الانفتاح حول القرارات، لا المصادر الطبيعية والصناعية."]},{"q":"يمثّل ........ الأنشطة المتعددة التي يقوم بها الإنسان في حياته لكي يتكيف مع متطلبات البيئة والحياة المحيطة به.","o":["السلوك التنظيمي","السلوك الإنساني","جميع ما سبق"],"c":1,"w":["السلوك التنظيمي يخص سلوك العاملين داخل الوحدات التنظيمية لا الأنشطة العامة للتكيف.","السلوك الإنساني = الأنشطة المتعددة التي يقوم بها الإنسان للتكيف مع متطلبات البيئة.","ليست جميعها صحيحة؛ التعريف ينطبق على السلوك الإنساني فقط."]},{"q":"هو النظرة الإيجابية تجاه الأمور وشعور يحفّز الفرد على المزيد من العمل.","o":["الإصرار","التآلف","التفاؤل"],"c":2,"w":["الإصرار = العزيمة القوية والإرادة الصلبة لا النظرة الإيجابية المحفّزة.","التآلف = التوافق مع الآخرين لا النظرة الإيجابية.","التفاؤل = النظرة الإيجابية وشعور يحفّز على العمل ويمنح الأمل."]},{"q":"تنتمي مرحلة المقارنة من مراحل الإدراك إلى:","o":["العمليات","المدخلات","المخرجات"],"c":0,"w":["مقارنة المعلومات تقع ضمن العمليات (اختيار وتنظيم ومقارنة وتفسير).","المدخلات هي استقبال المثيرات لا المقارنة.","المخرجات هي السلوك الناتج لا المقارنة."]},{"q":"يُعدّ ........ أعلى مستويات التفكير وهو التفكير في التفكير.","o":["التفكير الإبداعي","التفكير التأملي","التفكير ما وراء المعرفي"],"c":2,"w":["التفكير الإبداعي = توليد الأفكار الجديدة لا أعلى المستويات.","التفكير التأملي = تأمل الموقف وتحليله لا التفكير في التفكير.","التفكير ما وراء المعرفي = أعلى مستويات التفكير وهو التفكير في التفكير."]},{"q":"هو السلوك الذي يحقق من خلاله الإنسان هدفه أي يصل إلى هدفه المراد تحقيقه دون عوائق.","o":["السلوك المجزي","السلوك المحبط","السلوك الدفاعي"],"c":0,"w":["السلوك المجزي = تحقيق الهدف دون عوائق.","السلوك المحبط = وجود عائق يحول دون تحقيق الهدف.","السلوك الدفاعي = حيل لتجنب الإحباط وتخفيض التوتر."]},{"q":"تركّز ........ على الحفاظ على رفاهية المجتمع وتحسين جودة الحياة للجميع.","o":["الاستدامة الاجتماعية","الاستدامة الاقتصادية","الاستدامة البيئية"],"c":0,"w":["الاستدامة الاجتماعية = الحفاظ على رفاهية المجتمع وتحسين جودة الحياة.","الاقتصادية = الحفاظ على رأس المال وتحسين مستوى المعيشة.","البيئية = حماية رأس المال الطبيعي."]},{"q":"الوسيلة التي يعتمد عليها المدير لتطوير نظام يتم بموجبه إعطاء المعلومات وتفسيرها للجميع داخل المنظمة وخارجها.","o":["الاتصال التنظيمي","الاتصال التربوي","الاتصال الشخصي"],"c":0,"w":["الاتصال التنظيمي (تعريف جلويك) = الوسيلة التي يطوّر بها المدير نظامًا لإعطاء المعلومات داخل المنظمة وخارجها.","الاتصال التربوي بين الأطراف التعليمية في المدرسة لا هذا التعريف الإداري.","الاتصال الشخصي بين شخصين في المجموعات الصغيرة لا هذا التعريف."]},{"q":"هي قدرة الشخص على تنظيم وإدارة انفعالاته في التعامل مع الآخرين.","o":["المشاركة الوجدانية","المهارات الاجتماعية","المعرفة الانفعالية"],"c":1,"w":["المشاركة الوجدانية (التعاطف) = الحساسية تجاه مشاعر الآخرين لا تنظيم الانفعالات.","المهارات الاجتماعية = قدرة الشخص على تنظيم وإدارة انفعالاته في التعامل مع الآخرين.","المعرفة الانفعالية = الوعي بالانفعالات الذاتية لا إدارتها مع الآخرين."]},{"q":"الجماعة المنبثقة من سلسلة القيادة تُعرف بـ:","o":["السلوك التنظيمي","الهيكل التنظيمي","التنظيم"],"c":1,"w":["السلوك التنظيمي يخص استجابات الأفراد لا الجماعة المنبثقة من سلسلة القيادة.","جماعة الأوامر تنبثق من سلسلة القيادة في الهيكل التنظيمي للمنظمة.","التنظيم مفهوم عام لا يخص تحديدًا الجماعة المنبثقة من سلسلة القيادة."]},{"q":"........ معدل الاستفادة من المكونات الطبيعية التي تشكّل حافزًا مهمًا لاستدامة حياة الكائنات الحية.","o":["نطاق الاستدامة","الادخار","الاستهلاك"],"c":2,"w":["نطاق الاستدامة = المجال الذي تُطبّق فيه الاستدامة لا معدل الاستفادة.","الادخار غير وارد كمبدأ في هذا السياق.","الاستهلاك = معدل الاستفادة من المكونات الطبيعية المؤثرة في استدامة الحياة."]},{"q":"من العوامل المؤثرة في اتخاذ القرار لدى المعلم:","o":["القيم والمعتقدات","الميول والطموحات","جميع ما سبق"],"c":2,"w":["القيم والمعتقدات عامل صحيح لكنه ليس الوحيد.","الميول والطموحات عامل صحيح لكنه ليس الوحيد.","كلٌّ من القيم والمعتقدات والميول والطموحات من عوامل اتخاذ القرار، فالإجابة جميع ما سبق."]},{"q":"تُسهم فرق العمل المدرسية في ........ للعاملين.","o":["التمكين الإداري","زيادة الضغط والتوتر","زيادة الراتب"],"c":0,"w":["فرق العمل تنشر اللامركزية وتدعم التمكين الإداري للعاملين.","العكس؛ الفرق تقلّل الضغط والتوتر لا تزيدهما.","زيادة الراتب غير واردة ضمن إسهامات فرق العمل."]},{"q":"من المعوّقات ........ للاتصال عدم وجود إدارة فعّالة لجمع المعلومات وتصنيفها وتوزيعها على الإدارات المختصة.","o":["البيئية","التنظيمية","الشخصية"],"c":1,"w":["المعوّقات البيئية تتعلق بالظروف الخارجية كالتشتت الجغرافي لا إدارة المعلومات.","عدم وجود إدارة فعّالة للمعلومات معوّق تنظيمي.","المعوّقات الشخصية تتعلق بالأفراد كالتباين في الإدراك لا إدارة المعلومات."]},{"q":"من خصائص السلوك الإنساني أنه سلوك ........ حيث ينتج عن تفاعل عدد كبير من العوامل منها طبيعة الفرد والبيئة المحيطة وكذلك طبيعة الموقف نفسه.","o":["سلوك مرن","سلوك معقّد","سلوك عقلي"],"c":1,"w":["المرونة خاصية مستقلة لا تطابق وصف تفاعل عدد كبير من العوامل.","السلوك معقّد لأنه ينتج عن تفاعل عوامل الفرد والموقف والبيئة.","كونه عقليًا خاصية أخرى لا تطابق وصف تعدد العوامل المتفاعلة."]},{"q":"تعزيز الانتماء والولاء، والشعور بالتقدير، والشعور بالإنجاز وتحقيق الذات من المزايا ........ لفرق العمل.","o":["المهنية","النفسية","الاجتماعية"],"c":1,"w":["المزايا المهنية تتعلق بالكفاءة والخبرة لا بالانتماء والشعور بالتقدير.","المزايا النفسية = الانتماء والولاء والشعور بالتقدير والإنجاز وتحقيق الذات.","المزايا الاجتماعية = العلاقات العميقة والاحترام المتبادل والأنشطة الاجتماعية."]},{"q":"يُعدّ ........ من المبادئ الأساسية لتطبيق الاستدامة في أي بيئة حيوية.","o":["الاستهلاك","نطاق الاستدامة","جميع ما سبق"],"c":2,"w":["الاستهلاك مبدأ صحيح لكنه ليس الوحيد.","نطاق الاستدامة مبدأ صحيح لكنه ليس الوحيد.","كلٌّ من الاستهلاك ونطاق الاستدامة من مبادئ التطبيق، فالإجابة جميع ما سبق."]},{"q":"كل مما يلي يُعدّ من المعوّقات الشخصية للاتصال التربوي ما عدا:","o":["عدم وجود هيكل تنظيمي واضح","التباين في الإدراك","القصور في المهارات"],"c":0,"w":["عدم وجود هيكل تنظيمي واضح معوّق تنظيمي لا شخصي، فهو الاستثناء المطلوب.","التباين في الإدراك معوّق شخصي فعلي.","القصور في المهارات معوّق شخصي فعلي."]},{"q":"تُعرف فرق العمل بـ:","o":["جماعة المهمة","الهيكل التنظيمي","الجماعة المنبثقة من سلسلة القيادة"],"c":0,"w":["فرق العمل = جماعة المهمة أو الوظيفية (أعضاء لهم اهتمام أو خبرة مشتركة).","الهيكل التنظيمي بناء تنظيمي لا تعريف لفرق العمل.","الجماعة المنبثقة من سلسلة القيادة هي جماعة الأوامر لا فرق العمل."]},{"q":"يهتم نموذج ........ بالنواحي البيئية والأخلاقية والتعليمية والاقتصادية للاستدامة.","o":["كلوس سبيلر","كارتر ورودجرز","كارتر ورودجرز المعدّل"],"c":0,"w":["نموذج كلوس سبيلر وميتشام نظر في النواحي البيئية والأخلاقية والتعليمية والاقتصادية.","نموذج كارتر ورودجرز الأساسي ثلاثي الأبعاد (بيئة وم��تمع واقتصاد).","النموذج المعدّل يخص سلسلة التوريد لا هذه النواحي الأربع."]},{"q":"تُعدّ عملية الاتصال جزءًا من العملية ........ للمديرين لأنها تتعلق بنقل المعلومات إلى المرؤوسين واستقبالها لتحقيق أهداف المنظمة.","o":["الرقابية","التخطيطية","التنظيمية"],"c":0,"w":["الاتصال جزء من العملية الرقابية لأنه يتعلق بنقل المعلومات للمرؤوسين واستقبالها.","العملية التخطيطية تخص وضع الخطط لا نقل المعلومات الرقابي.","العملية التنظيمية تخص ترتيب الموارد والأدوار لا هذا السياق."]},{"q":"تتّسم العلاقة بين أعضاء فريق العمل بأنها:","o":["اعتمادية","شمولية","ضمنية"],"c":0,"w":["العلاقة بين أعضاء الفريق اعتمادية وتبادلية.","الشمولية لم ترد كخاصية للعلاقة بين الأعضاء.","الضمنية لم ترد كخاصية للعلاقة بين الأعضاء."]},{"q":"........ هو حالة اتصال وثيق بشخص آخر تحقق التواصل والتعاون والتفاعل الإيجابي.","o":["الحضور","الوعي الموقفي","التعاطف"],"c":2,"w":["الحضور = بُعد التأثير لا حالة الاتصال الوثيق المحققة للتواصل.","الوعي الموقفي = قراءة المواقف لا حالة الاتصال الوثيق.","التعاطف = حالة اتصال وثيق تخلق أساسًا للتواصل والتعاون والتفاعل الإيجابي."]},{"q":"تُعرف الاستدامة المهنية للمعلم بناءً على ........ أبعاد رئيسية.","o":["ثلاثة","أربعة","خمسة"],"c":0,"w":["الاستدامة المهنية للمعلم تُعرّف بثلاثة أبعاد: المهني والتنظيمي والتوقعات الخاصة بالعمل.","العدد أربعة خطأ؛ الأبعاد ثلاثة.","العدد خمسة خطأ؛ الأبعاد ثلاثة."]},{"q":"هو عملية نقل وتبادل الآراء والتوجيهات بين الأطراف التعليمية والإدارية في المدرسة لتحقيق الأهداف التربوية.","o":["الاتصال الشخصي","الاتصال التربوي","الاتصال التنظيمي"],"c":1,"w":["الاتصال الشخصي بين شخصين لا هذا السياق المدرسي التربوي.","الاتصال التربوي = نقل وتبادل الآراء والتوجيهات بين أطراف العملية التعليمية في المدرسة.","الاتصال التنظيمي تعريف إداري عام لا يخص خصوصًا الأطراف التعليمية."]},{"q":"تهدف الاستدامة ........ إلى تحسين رفاهية الإنسان من خلال حماية رأس المال الطبيعي.","o":["الاجتماعية","الاقتصادية","البيئية"],"c":2,"w":["الاجتماعية تتعلق برفاهية المجتمع لا حماية رأس المال الطبيعي.","الاقتصادية تتعلق برأس المال الاقتصادي لا الطبيعي.","البيئية تهدف لتحسين رفاهية الإنسان من خلال حماية رأس المال الطبيعي."]},{"q":"يركّز نموذج ........ على الانتقال من الطريقة المستقلة إلى المنهج التعاوني.","o":["كارتر ورودجرز","كارتر ورودجرز المعدّل","كلوس سبيلر"],"c":0,"w":["نموذج كارتر ورودجرز الأساسي بُني على الانتقال من النهج المستقل إلى نهج أكثر تعاونية.","النموذج المعدّل يخص سلسلة التوريد بإضافة المخاطر والشفافية لا الانتقال للتعاون.","نموذج كلوس سبيلر يخص النواحي البيئية والأخلاقية والتعليمية والاقتصادية."]},{"q":"هو تحديد أهداف مستدامة ووضع خطط لتحقيقها على المدى الطويل.","o":["الابتكار المستدام","التنظيم","تخطيط الاستدامة"],"c":2,"w":["الابتكار المستدام = توليد حلول جديدة لا تحديد الأهداف ووضع الخطط.","التنظيم ترتيب للموارد لا تحديد أهداف ووضع خطط طويلة المدى.","تخطيط الاستدامة = تحديد أهداف مستدامة ووضع خطط لتحقيقها على المدى الطويل."]},{"q":"يحظى بعض العاملين بمكانة غير رسمية والتي تنبثق في:","o":["المسمى الوظيفي","السن","فخامة الأثاث"],"c":1,"w":["المسمى الوظيفي مكانة رسمية لا غير رسمية.","المكانة غير الرسمية تنبثق من عوامل اجتماعية كالسن وكبر العاملين.","فخامة الأثاث مظهر للمكانة الرسمية لا غير الرسمية."]},{"q":"........ الذي يقوم على سياسة الباب المفتوح وقد يكون ذلك محددًا بصورة رسمية أو غير رسمية حسب سياسة المدير.","o":["الاتصال الأفقي","الاتصال من جميع الجهات","لا توجد إجابة صحيحة"],"c":1,"w":["الاتصال الأفقي بين المستويات المتساوية لا سياسة الباب المفتوح.","الاتصال من جميع الجهات يقوم على سياسة الباب المفتوح حسب سياسة المدير.","توجد إجابة صحيحة وهي الاتصال من جميع الجهات."]},{"q":"هي الطاقة التي تنفّذ أفكارنا وتدفعنا إلى الإنجاز.","o":["العمل الجماعي","الحماس","التواصل"],"c":1,"w":["العمل الجماعي = تعاون مجموعة لهدف مشترك لا الطاقة الدافعة.","الحماس = الطاقة التي تنفّذ أفكارنا وتدفعنا للإنجاز.","التواصل = نقل وتبادل المعلومات لا الطاقة الدافعة."]},{"q":"يتوقف نجاح فريق التطوير على:","o":["اقتناعه بالمهمة","اقتناعه بالمشكلة","وجود التفكير الابتكاري"],"c":2,"w":["الاقتناع بالمهمة لا يخص تحديدًا فريق التطوير.","الاقتناع بالمشكلة يخص فريق حل المشكلات لا فريق التطوير.","نجاح فريق التطوير يتوقف على القدرات الابتكارية والتفكير غير التقليدي."]},{"q":"........ من أبعاد الاستدامة المهنية يتمثل في حصول الفرد على أكثر من براءة اختراع.","o":["البعد التنظيمي","البعد المهني","البعد الخاص بالتوقعات الخاصة بالعمل"],"c":1,"w":["البعد التنظيمي = الوصول إلى مستوى معين أو مكافأة مالية لا براءات الاختراع.","البعد المهني = حصول الفرد على أكثر من براءة اختراع أو نشر مقالة محكمة.","التوقعات الخاصة بالعمل = الموازنة والأمانة في أداء المهام لا براءات الاختراع."]},{"q":"........ قُصد بها الأحداث والمفاجآت غير المتوقعة داخل المؤسسة أو خارجها.","o":["المشاكل الجوهرية","المشاكل العرضية","المشاكل المتكررة"],"c":1,"w":["الجوهرية تتعلق بالتخطيط والتنظيم لا الأحداث المفاجئة.","المشاكل العرضية (الطارئة) = الأحداث والمفاجآت غير المتوقعة.","المتكررة ذات علاقة بالأمور اليومية لا المفاجآت."]},{"q":"من أنواع السلوك الإنساني الذي يمارسه الإنسان منذ ولادته بدون تعلم أو تدريب كالأكل والشرب.","o":["السلوك الجماعي","السلوك المكتسب","السلوك الفطري"],"c":2,"w":["السلوك الجماعي = علاقة الفرد بالآخرين لا السلوك منذ الولادة.","السلوك المكتسب = ما يُتعلّم ويُدرّب عليه لا الفطري.","السلوك الفطري = ما يُمارس منذ الولادة بلا تعلم كالأكل والشرب."]},{"q":"........ عن الانفتاح حول القرارات والأنشطة التي تؤثر على المجتمع والاقتصاد والبيئة.","o":["النزاهة","الموارد","الشفافية"],"c":2,"w":["النزاهة = الالتزام بالمعايير والقوانين لا الانفتاح حول القرارات.","الموارد = المصادر الطبيعية والصناعية لا الانفتاح.","الشفافية = الانفتاح حول القرارات والأنشطة المؤثرة في المجتمع والاقتصاد والبيئة."]},{"q":"........ وضع معايير حتى لا تتأثر عملية تقييم أداء العاملين بالانطباعات الشخصية.","o":["جزئية","موضوعية","شاملة"],"c":1,"w":["المعايير الجزئية لا تمنع تأثّر التقييم بالانطباعات الشخصية.","المعايير الموضوعية تمنع تأثّر التقييم بالانطباعات الشخصية.","الشمول وحده لا يضمن الموضوعية المطلوبة لمنع الانطباعات."]},{"q":"يتأثر تحديد أدوات نقل الرسالة في موقف معين ببعض المتغيرات منها:","o":["درجة الخبرة","شخصية المرسل","الوقت"],"c":2,"w":["درجة الخبرة من عوامل المرسل لا من متغيرات اختيار أداة نقل الرسالة.","شخصية المرسل من عوامل المصدر لا من متغيرات اختيار الأداة.","الوقت من متغيرات اختيار أداة نقل الرسالة مع الإلحاح والسرية والأهمية والتكلفة."]},{"q":"من مميزات الاتصال ........ اكتشاف الأخطاء قبل استفحالها ووصولها إلى درجة لا يمكن حلها.","o":["الأفقي","الهابط","الصاعد"],"c":2,"w":["الأفقي بين المستويات المتساوية لا يخص اكتشاف الأخطاء صعودًا.","الهابط من الرؤساء للمرؤوسين (الأوامر) لا اكتشاف الأخطاء.","الصاعد يمكّن من اكتشاف الأخطاء قبل استفحالها."]},{"q":"تُعتبر ........ مرحلة وسيطة تمهّد للمرحلة التالية وهي مرحلة أداء المهام.","o":["مرحلة الصراع","مرحلة وضع القواعد","مرحلة التكوين"],"c":1,"w":["مرحلة الصراع (العصف) مرحلة خلافات لا الوسيطة الممهدة للأداء.","مرحلة وضع القواعد مرحلة وسيطة تمهّد لمرحلة أداء المهام.","مرحلة التكوين مرحلة تعارف بدائية لا الوسيطة."]},{"q":"كل مما يلي يُعدّ من أهداف السلوك التنظيمي ما عدا:","o":["تنمية التنبوء بسلوك العاملين ","فهم سلوك العاملين","التوضيح والتفسير"],"c":0,"w":["تنمية وتسويق العاملين لم ترد ضمن أهداف السلوك التنظيمي، فهي الاستثناء المطلوب.","فهم سلوك العاملين هدف فعلي للسلوك التنظيمي.","التوضيح والتفسير (الفهم) من أهداف السلوك التنظيمي."]},{"q":"يعمل ........ على تقييم مصداقية الظواهر والوصول إلى أحكام منطقية.","o":["التفكير الناقد","التفكير التأملي","التفكير الإبداعي"],"c":0,"w":["التفكير الناقد = تقييم مصداقية الظواهر والوصول إلى أحكام منطقية.","التفكير التأملي = تأمل الموقف ورسم الخطط لفهمه لا تقييم المصداقية.","التفكير الإبداعي = توليد أفكار جديدة لا تقييم المصداقية."]},{"q":"تعود أهمية بناء فرق العمل بالمدرسة إلى قدرتها على:","o":["اكتشاف الاحتياجات التدريبية الضرورية للعاملين","زيادة الضغط والتوتر","نشر المركزية"],"c":0,"w":["عمل الفريق مدخل لاكتشاف الاحتياجات التدريبية الضرورية للعاملين.","العكس؛ الفرق تقلّل الضغط والتوتر.","الفرق تنشر اللامركزية لا المركزية."]},{"q":"تستعد عملية ........ لتقييم فعالية الاتصال.","o":["التقويم","التغذية العكسية","الإشراف"],"c":1,"w":["التقويم لم يرد بهذا المعنى لتقييم فعالية الاتصال.","التغذية العكسية (المرتدة) تُستخدم لتقييم فعالية الاتصال.","الإشراف لم يرد بهذا المعنى."]},{"q":"نموذج الاستدامة المهنية الثلاثي هو نموذج:","o":["كلوس سبيلر","الاستدامة البيئية","كارتر ورودجرز"],"c":2,"w":["كلوس سبيلر نموذج مختلف يخص نواحي بيئية وأخلاقية وتعليمية واقتصادية.","الاستدامة البيئية ركيزة لا نموذج ثلاثي.","نموذج كارتر ورودجرز هو نموذج الاستدامة الثلاثي (بيئة ومجتمع وأداء اقتصادي)."]},{"q":"خلال مرحلة ........ يبدأ الأعضاء في القيام بأدوارهم ويمارسون تخصصاتهم المهنية أو الوظيفية كل في مجاله.","o":["الأداء","التكوين","وضع القواعد"],"c":0,"w":["مرحلة الأداء = بدء الأعضاء القيام بأدوارهم وممارسة تخصصاتهم.","التكوين مرحلة تعارف بدائية لا ممارسة الأدوار.","وضع القواعد مرحلة وسيطة تمهّد للأداء لا الأداء نفسه."]},{"q":"هو السلوك الذي يمارسه الإنسان منذ الصغر عن طريق التعلم والتدريب على بعض الأنشطة والمهارات مثل القراءة والكتابة.","o":["السلوك الفطري","السلوك الفردي","السلوك المكتسب"],"c":2,"w":["السلوك الفطري بلا تعلم (كالأكل والشرب) لا بالتعلم.","السلوك الفردي = استجابة فرد واحد لا التعلم والتدريب.","السلوك المكتسب = ما يُتعلّم ويُدرّب عليه كالقراءة والكتابة."]},{"q":"تبنّي أسلوب حياة مستدام يتوقف على:","o":["تعزيز الوعي بأهمية الاستدامة","توجيه الانتباه نحو التحديات البيئية والاقتصادية","جميع ما سبق"],"c":2,"w":["تعزيز الوعي صحيح لكنه ليس الوحيد.","توجيه الانتباه للتحديات صحيح لكنه ليس الوحيد.","كلاهما من متطلبات تبنّي أسلوب حياة مستدام، فالإجابة جميع ما سبق."]},{"q":"من عيوب الاتصالات ........ فشل المرسل في التعبير مما يؤدي إلى عدم فهم المستقبِل مغزى الرسالة.","o":["الشفوية","المكتوبة","الأفقية"],"c":1,"w":["الاتصالات الشفوية عيوبها تتعلق بالنسيان وعدم التوثيق لا فشل التعبير الكتابي.","فشل المرسل في التعبير كتابةً من عيوب الاتصالات المكتوبة.","الأفقية اتجاه اتصال لا نوعًا تُنسب إليه هذه العيوب."]},{"q":"التغيير المفاجئ في السياسات الحكومية يُعدّ من المشاكل:","o":["الطارئة","الجوهرية","المتكررة"],"c":0,"w":["التغيير المفاجئ في السياسات الحكومية مثال للمشاكل الطارئة (العرضية).","الجوهرية تتعلق بالتخطيط والتنظيم لا المفاجآت.","المتكررة يومية لا مفاجئة."]},{"q":"كل مما يلي من مبررات الاهتمام بالسلوك التنظيمي ما عدا:","o":["أهمية الموارد البشرية","التنبؤ بسلوك العاملين","تعقّد الطبيعة البشرية"],"c":1,"w":["أهمية الموارد البشرية من مبررات الاهتمام بالسلوك التنظيمي.","التنبؤ بسلوك العاملين هدف من أهداف السلوك التنظيمي لا من مبرراته، فهو الاستثناء.","تعقّد الطبيعة البشرية من مبررات الاهتمام بالسلوك التنظيمي."]},{"q":"هو تحديد أهداف مستدامة ووضع خطط لتحقيقها على المدى الطويل (تكرار).","o":["الابتكار المستدام","التنظيم","تخطيط الاستدامة"],"c":2,"w":["الابتكار المستدام = توليد حلول جديدة لا تحديد الأهداف.","التنظيم ترتيب للموارد لا وضع الخطط طويلة المدى.","تخطيط الاستدامة = تحديد أهداف مستدامة ووضع خطط لتحقيقها على المدى الطويل."]},{"q":"يُعدّ من العوامل المؤثرة في الإدراك ذات العلاقة بالمثير:","o":["التكرار","ذكاء الفرد","التعليم"],"c":0,"w":["التكرار من عوامل المثير المؤثرة في الإدراك مع الحجم والشدة والحركة والتباين.","ذكاء الفرد عامل متعلق بالفرد لا بالمثير.","التعليم عامل متعلق بالبيئة لا بالمثير."]},{"q":"عدم كفاية أدوات الاتصال بحيث أنها لا تستطيع التغلب على مشكلة التشتت الجغرافي تُعدّ من معوّقات الاتصال:","o":["الشخصية","التنظيمية","البيئية"],"c":2,"w":["المعوّقات الشخصية تتعلق بالأفراد كالتباين في الإدراك لا التشتت الجغرافي.","المعوّقات التنظيمية تتعلق بإدارة المعلومات والهيكل لا التشتت الجغرافي.","عدم كفاية أدوات الاتصال للتغلب على التشتت الجغرافي معوّق بيئي."]},{"q":"يتولّى فريق ........ مسؤولية وضع خطط الإصلاح وتنفيذها ومتابعة ذلك التنفيذ.","o":["التحسين المدرسي","إدارة الأزمات","المناهج الدراسية"],"c":0,"w":["فريق التحسين المدرسي = وضع خطط الإصلاح وتنفيذها ومتابعتها بعد تحديد نقاط الضعف.","فريق إدارة الأزمات يتولّى الأزمات الطارئة كالحرائق لا خطط الإصلاح.","فريق المناهج يخص المناهج لا خطط الإصلاح والمتابعة."]},{"q":"في نموذج ........ تُعدّ الشفافية مبدأً لا يمكن تحقيقه إلا من خلال التعامل مع أصحاب المصلحة والمستفيدين.","o":["كارتر ورودجرز","كارتر ورودجرز المعدّل","كلوس سبيلر"],"c":1,"w":["النموذج الأساسي ثلاثي الأبعاد فقط ولا يتضمن هذا التفصيل عن الشفافية.","النموذج المعدّل لسلسلة التوريد يتضمن الشفافية عبر التعامل مع أصحاب المصلحة.","نموذج كلوس سبيلر نموذج مختلف."]},{"q":"ترجع أهمية الهيكل التنظيمي إلى أنه:","o":["يزيد موارد المنظمة","يحدد خطوط الاتصال داخل المنظمة","يحسّن الأداء التنظيمي"],"c":1,"w":["زيادة الموارد ليست من فوائد الهيكل التنظيمي المذكورة.","الهيكل التنظيمي يحدد خطوط الاتصال الصادرة من مراكز السلطة المختلفة.","الفائدة المنصوص عليها هنا هي تحديد خطوط الاتصال لا تحسين الأداء."]},{"q":"هي جماعات تنمو بصورة طبيعية بين أعضاء المنظمة دون توجيه من إدارة المنظمة.","o":["جماعات العمل غير الرسمية","جماعات العمل الرسمية","الجماعات المرجعية"],"c":0,"w":["جماعات العمل غير الرسمية تنمو طبيعيًا دون توجيه من الإدارة.","الجماعات الرسمية تُكوّن بتوجيه الإدارة.","الجماعات المرجعية هي التي يرغب الفرد الانضمام إليها لا التي تنمو طبيعيًا."]},{"q":"الاتصال بين المعلمين الذين يقومون بتدريس نفس المادة في نفس الفرقة يُعدّ مثالًا على الاتصال:","o":["الأفقي","في جميع الاتجاهات","غير المباشر"],"c":0,"w":["الاتصال الأفقي يكون بين مستويات وظيفية متساوية كمعلمي نفس المادة والفرقة.","الاتصال من جميع الاتجاهات يقوم على الباب المفتوح لا هذا المثال.","غير المباشر يخص وسيلة النقل لا العلاقة بين المستويات المتساوية."]},{"q":"الهدف ........ الحفاظ على رأس المال سليمًا وتحسين مستوى المعيشة.","o":["الاستدامة الثقافية","الاستدامة التكنولوجية","الاستدامة الاقتصادية"],"c":2,"w":["الثقافية تتعلق بالتنوع الثقافي لا رأس المال.","التكنولوجية تتعلق بالتقنيات المستدامة لا رأس المال.","الاقتصادية = الحفاظ على رأس المال سليمًا وتحسين مستوى المعيشة."]},{"q":"يستغلّ المسوّقون العوامل المؤثرة في الإدراك ذات العلاقة بـ ........ للترويج لمنتجاتهم.","o":["المثير","البيئة","الفرد"],"c":0,"w":["المسوّقون يستغلّون عوامل المثير كالحجم والحركة والتكرار والتباين لجذب الانتباه.","عوامل البيئة كالأسرة والتعليم لا تُستغل بهذا الشكل التسويقي المباشر.","عوامل الفرد كالذكاء والحاجات داخلية لا تُستغل تسويقيًا بهذا الشكل."]},{"q":"تتم عملية الإدراك حينما يصدر الفرد ........ المثير الخارجي.","o":["سلوكًا تجاه","تفسيرًا لـ","شعورًا بـ"],"c":0,"w":["الإدراك الحقيقي يتحقق حين يصدر الفرد سلوكًا تجاه المثير.","مجرد التفسير دون سلوك لا يكفي لتحقق الإدراك الكامل.","مجرد الشعور بالمثير إحساس لا إدراك."]},{"q":"........ هو صورة من صور السلوك الإنساني يوضّح علاقة الفرد بغيره من الأفراد الآخرين ويؤثر فيهم ويتأثر بهم.","o":["السلوك الفردي","السلوك المحبط","السلوك الجماعي"],"c":2,"w":["السلوك الفردي = استجابة فرد واحد لا علاقة الفرد بالآخرين.","السلوك المحبط = وجود عائق دون الهدف لا العلاقة بالآخرين.","السلوك الجماعي (الاجتماعي) = علاقة الفرد بالآخرين تأثيرًا وتأثرًا."]},{"q":"الوصف الوظيفي الدقيق لأدوار العاملين د��خل المنظمات ........","o":["يقلل فرص الرقي","يقلل الصراعات","يزيد الاختصاصات"],"c":1,"w":["الوصف الوظيفي الدقيق لا يقلل فرص الرقي.","الوصف الوظيفي الدقيق يقلّل صراع الأدوار والصراعات.","لا يزيد الاختصاصات بل يوضّحها ويحددها."]},{"q":"هو السلوك الذي يمارسه الإنسان لكي يتفادى ويتجنب السلوك المحبط ويساعد الفرد على تخفيض التوتر.","o":["السلوك الدفاعي","السلوك الجماعي","جميع ما سبق"],"c":0,"w":["السلوك الدفاعي (الحيل اللاشعورية) = تفادي الإحباط وتخفيض التوتر.","السلوك الجماعي = علاقة الفرد بالآخرين لا تفادي الإحباط.","ليست جميعها؛ التعريف ينطبق على السلوك الدفاعي فقط."]},{"q":"يسهّل حماية الموارد الطبيعية وضمان استخدامها وإدارتها بشكل مسؤول.","o":["التنظيم","الابتكار المستدام","الإشراف البيئي"],"c":2,"w":["التنظيم ترتيب للموارد لا حماية الموارد الطبيعية وإدارتها مسؤولًا.","الابتكار المستدام = حلول جديدة لا حماية الموارد الطبيعية.","الإشراف البيئي = حماية الموارد الطبيعية وضمان استخدامها وإدارتها بمسؤولية."]},{"q":"تُصنّف فرق العمل على أنها من:","o":["جماعات العمل الرسمية","جماعات العمل غير الرسمية","جماعة الصداقة"],"c":0,"w":["فرق العمل = جماعة المهمة وتُصنّف ضمن الجماعات الرسمية المكوّنة بتوجيه الإدارة.","الجماعات غير الرسمية تنمو طبيعيًا دون توجيه، وفرق العمل ليست كذلك.","جماعة الصداقة من الجماعات غير الرسمية لا فرق العمل."]},{"q":"يُقصد بالبناء الذي يحدد التركيب الداخلي للمنشأة وبين التقسيمات والتنظيمات والوحدات الفرعية والعلاقات بين أقسامها.","o":["التطوير التنظيمي","الهيكل التنظيمي","الاتصال التنظيمي"],"c":1,"w":["التطوير التنظيمي عملية تحسين لا البناء الذي يحدد التركيب الداخلي.","الهيكل التنظيمي = البناء الذي يحدد التركيب الداخلي والتقسيمات والعلاقات بين الأقسام.","الاتصال التنظيمي وسيلة لنقل المعلومات لا البناء الداخلي."]},{"q":"يُعرف بأنه الاستجابات التي تصدر عن الفرد نتيجة احتكاكه بغيره أو اتصاله بالبيئة الخارجية والاهتمام بدراسة سلوك العاملين داخل الوحدات التنظيمية المختلفة.","o":["السلوك التنظيمي","السلوك الإنساني","لا توجد إجابة صحيحة"],"c":0,"w":["السلوك التنظيمي = استجابات الفرد من احتكاكه بالآخرين مع الاهتمام بسلوك العاملين داخل الوحدات التنظيمية.","السلوك الإنساني أعمّ ولا يتقيّد بالوحدات التنظيمية.","توجد إجابة صحيحة وهي السلوك التنظيمي."]},{"q":"كلما ارتقى الفرد في التعليم زاد إدراكه، تُعدّ من العوامل المرتبطة بـ ........ والمؤثرة في الإدراك.","o":["المثير","الفرد","البيئة"],"c":2,"w":["المثير يخص خصائص المنبه كالحجم والحركة لا التعليم.","عوامل الفرد كالذكاء والحاجات داخلية لا التعليم البيئي.","مراحل التعليم والمناهج عامل بيئي يوسّع مدارك الفرد."]},{"q":"وضع المنظمة في مركز تنافسي يُعدّ من ........ التطوير التنظيمي.","o":["معالم","أسباب","متطلبات"],"c":1,"w":["المعالم تخص الملامح لا الدوافع.","وضع المنظمة في مركز تنافسي من أسباب التطوير التنظيمي (الارتقاء ورفع الأداء).","المتطلبات هي مستلزمات التنفيذ لا الدوافع."]},{"q":"من أمثلة الجماعات الرسمية:","o":["الهيكل التنظيمي","الأصدقاء","جماعة المصلحة"],"c":0,"w":["الجماعات الرسمية تنبثق من الهيكل التنظيمي وسلسلة القيادة.","الأصدقاء (جماعة الصداقة) من الجماعات غير الرسمية.","جماعة المصلحة من الجماعات غير الرسمية."]},{"q":"المرتبة الأولى في العوامل المرتبطة بالبيئة المؤثرة في الإدراك:","o":["الأسرة","التعليم","الطبقة الاجتماعية"],"c":0,"w":["الأسرة تأتي في المرتبة الأولى لأنها المصدر الأساسي لقيم الفرد منذ الولادة.","التعليم عامل بيئي مؤثر لكنه ليس في المرتبة الأولى.","الطبقة الاجتماعية عامل بيئي لكنه ليس في المرتبة الأولى."]},{"q":"يعتمد نجاح فريق التطوير على:","o":["وجود القدرات الابتكارية لدى الأعضاء","رغبة الأعضاء في حل المشكلة","اقتناع الأعضاء بالمشكلة"],"c":0,"w":["نجاح فريق التطوير يتوقف على القدرات الابتكارية والتفكير غير التقليدي.","رغبة حل المشكلة من مقومات فريق حل المشكلات لا التطوير.","اقتناع الأعضاء بالمشكلة من مقومات فريق حل المشكلات لا التطوير."]},{"q":"من مزايا فرق العمل التي تعود على الفرد:","o":["تنسيق الجهود","تماسك التنظيم","الشعور بتحقيق الذات"],"c":2,"w":["تنسيق الجهود ميزة تنظيمية تعود على المنظمة لا الفرد.","تماسك التنظيم ميزة تنظيمية تعود على المنظمة لا الفرد.","الشعور بتحقيق الذات من المزايا النفسية التي تعود على الفرد."]},{"q":"من الصعوبات التي تحدّ من فعالية أداء فرق العمل:","o":["ضعف اللوائح والقوانين","غموض الدور","ضعف الراتب الشهري للفرد"],"c":1,"w":["ضعف اللوائح والقوانين لم يرد ضمن معوّقات فعالية الفريق.","غموض الدور وضعف الوصف الوظيفي من معوّقات فعالية الفريق.","ضعف الراتب لم يرد ضمن معوّقات فعالية الفريق."]},{"q":"حدّد دانيال جولمان ........ أبعاد للذكاء الانفعالي.","o":["ثلاثة","خمسة","أربعة"],"c":1,"w":["العدد ثلاثة خطأ؛ جولمان حدّد خمسة أبعاد.","حدّد جولمان خمسة أبعاد للذكاء الانفعالي.","العدد أربعة خطأ؛ الأبعاد خمسة."]}],
+tf: [{"q":"يقلل التطوير التنظيمي من القدرة التنافسية للمنظمة.","c":false,"w":"التطوير التنظيمي يرفع القدرة التنافسية للمنظمة ويضمن استمراريتها لا أن يقلّلها."},{"q":"يحافظ الاتصال غير المباشر على ضمان سرية عملية الاتصال دون تسرب المعلومات.","c":false,"w":"السرية من متغيرات اختيار وسيلة الاتصال، والاتصال المباشر (وجهًا لوجه) هو الأقدر على ضمان السرية، أما غير المباشر فأكثر عرضة لتسرّب المعلومات."},{"q":"ظهر مصطلح الاستدامة في خمسينات القرن السابع عشر.","c":true,"w":"."},{"q":"يجب أن يحجب أعضاء الفريق الواحد المعلومات عن بعضهم البعض.","c":false,"w":"نجاح الفريق يقوم على تبادل المعلومات والمصارحة والثقة لا على حجبها."},{"q":"يعد التفكير الاستراتيجي خطوة سابقة من الخطوات التي تقدم التخطيط الاستراتيجي.","c":true,"w":"التفكير الاستراتيجي يسبق التخطيط الاستراتيجي ويمهّد له."},{"q":"السلوك الجماعي هو صورة من صور السلوك الإنساني يوضح علاقة الفرد بغيره من الأفراد الآخرين ويؤثر فيهم ويتأثر بهم.","c":true,"w":"هذا هو نص تعريف السلوك الجماعي (الاجتماعي)."},{"q":"لا تختلف طرق تحقيق الاستدامة المهنية من شخص لآخر.","c":false,"w":"طرق تحقيق الاستدامة المهنية تختلف من شخص لآخر باختلاف ظروفه ومجاله."},{"q":"النزاهة هي وجود نية واضحة لتضمين الفئات المعنية الرئيسية في عمليات تطوير استراتيجية المؤسسة.","c":false,"w":"تلاعب لفظي؛ النزاهة = الالتزام بالمعايير الأخلاقية والقوانين والسلوكيات، أما تضمين الفئات المعنية وأصحاب المصلحة فيخص الشفافية وإشراك المستفيدين."},{"q":"الهدف من دراسة السلوك الإنساني هو تحسين الأداء والإنتاجية والفعالية التنظيمية والرضا الوظيفي.","c":false,"w":"استبدال خادع؛ هذه أهداف دراسة السلوك التنظيمي داخل المنظمات لا السلوك الإنساني العام."},{"q":"تركز العلاقات الإنسانية على الجوانب الاقتصادية أكثر من تركيزها على الفرد.","c":false,"w":"مدخل العلاقات الإنسانية يركّز على الفرد وحاجاته النفسية والاجتماعية لا على الجوانب الاقتصادية."},{"q":"كلما كانت نسبة الاستهلاك منخفضة أدى ذلك إلى المحافظة على استدامة الحياة والعكس صحيح.","c":false,"w":" ."},{"q":"مرحلة الصراع هي أصعب المراحل في بناء الفريق.","c":true,"w":"مرحلة الصراع (العصف) من أصعب مراحل بناء الفريق لظهور الخلافات قبل وضع القواعد والأداء."},{"q":"يخضع الذكاء الانفعالي لتأثير عوامل الوراثة.","c":false,"w":"الذكاء الانفعالي يمكن اكتسابه وتعلّمه وتنميته ولا يخضع لعوامل الوراثة."},{"q":"يتولى المرسل تحويل الإدراك الفكري إلى معانٍ محددة عن طريق استخدام اللغة والرموز والأشكال وغيرها.","c":true,"w":"هذا توصيف عملية الترميز التي يقوم بها المرسل (المصدر) في عناصر الاتصال."},{"q":"الثقافة التنظيمية وفقًا لنموذج كارتر ورودجرز المطوّر أحد دعائم التغير والازدهار نحو تحقيق الاستدامة.","c":true,"w":"نموذج كارتر ورودجرز المعدّل لسلسلة التوريد المستدامة يضيف ركائز داعمة منها إدارة المخاطر والشفافية والاستراتيجية والثقافة التنظيمية."},{"q":"لا يشترط وجود سبب لتكوين فريق العمل.","c":false,"w":"لا يُكوَّن فريق العمل اعتباطًا، بل لا بد من وجود سبب أو هدف مشترك يبرّر تكوينه."},{"q":"يتمثل البعد المهني في حصول الفرد على أكثر من براءة اختراع أو نشره لمقالة علمية في مجلة علمية محكمة.","c":true,"w":"هذا هو نص البعد المهني من أبعاد الاستدامة المهنية."},{"q":"يعرف الاتصال التنظيمي بأنه عملية تبادل الحقائق والأفكار والآراء بين شخصين أو أكثر.","c":false,"w":"استبدال خادع؛ هذا تعريف الاتصال بمعناه العام، أما الاتصال التنظيمي (جلويك) فهو الوسيلة التي يعتمد عليها المدير لتطوير نظام تُعطى بموجبه المعلومات داخل المنظمة وخارجها."},{"q":"المشاكل الجوهرية هي تلك المشاكل المتعلقة بالتخطيط والتنفيذ والإجراءات والتنظيم.","c":true,"w":"المشاكل الجوهرية تتصل بصميم عمل المنظمة من تخطيط وتنظيم وإجراءات، تمييزًا لها عن المشاكل العرضية الطارئة."},{"q":"المثيرات المتقاربة تُدرك كوحدة واحدة، فإذا تباعدت تُدرك كوحدات منفصلة.","c":true,"w":"هذا هو مبدأ التقارب ضمن العوامل ذات العلاقة بالمثير في تنظيم الإدراك."},{"q":"ظهرت أهمية الاستدامة في تقرير لجنة برونتلاند (١٩٧٧) الذي تناول الجوانب البيئية وغير البيئية للاستدامة.","c":false,"w":"تلاعب بالتاريخ؛ تقرير لجنة برونتلاند (مستقبلنا المشترك) صدر عام ١٩٨٧ لا ١٩٧٧."},{"q":"فرق العمل تقلل من تماسك التنظيم.","c":false,"w":"فرق العمل تزيد تماسك التنظيم والانتماء والولاء لا أن تقلّلها."},{"q":"الاتصال التنظيمي هو الوسيلة التي يعتمد عليها المدير لتطوير نظام يتم بموجبه إعطاء المعلومات للأفراد داخل المنظمة وخارجها.","c":true,"w":"هذا هو تعريف جلويك للاتصالات التنظيمية."},{"q":"من مزايا الهيكل التنظيمي توضيح خطوط السلطة والمسؤولية.","c":true,"w":"من فوائد الهيكل التنظيمي تحديد خطوط السلطة والمسؤولية والاتصال."},{"q":"يعد تحقيق الاستدامة تحديًا مهمًا للمجتمعات دون الأفراد.","c":false,"w":"تحقيق الاستدامة تحدٍّ ومسؤولية للمجتمعات والأفراد معًا لا للمجتمعات وحدها."},{"q":"يشترط لتكوين فرق العمل رضا العاملين.","c":true,"w":" ."},{"q":"التفكير الناقد هو التفكير الذي يعمل على تقييم مصداقية الظواهر.","c":true,"w":"التفكير الناقد يعمل على تقييم مصداقية الظواهر والوصول إلى أحكام منطقية."},{"q":"الوعي الموقفي من أبعاد الذكاء الاجتماعي.","c":true,"w":"الوعي الموقفي (الرا��ار الاجتماعي) أحد أبعاد الذكاء الاجتماعي."},{"q":"يعرف السلوك التنظيمي بأنه الاستجابات التي تصدر عن الفرد نتيجة لاحتكاكه بغيره من الأفراد واتصاله بالبيئة الخارجية من حوله.","c":true,"w":"هذا هو تعريف السلوك التنظيمي."},{"q":"لا يشترط أثناء التخطيط دراسة الماضي.","c":false,"w":"التخطيط السليم يتطلب دراسة الماضي والحاضر للتنبؤ بالمستقبل."},{"q":"من شروط تحقيق الاستدامة المهنية العدالة الاجتماعية التي تضمن وصول جميع الأفراد للاحتياجات الأساسية.","c":true,"w":"العدالة الاجتماعية وضمان وصول الجميع للاحتياجات الأساسية من ركائز الاستدامة الاجتماعية."},{"q":"عدم كفاءة الهيكل التنظيمي يعد من المعوقات البيئية التي تواجه الاتصال التربوي.","c":false,"w":"تلاعب لفظي؛ عدم كفاءة/وضوح الهيكل التنظيمي من المعوقات التنظيمية لا البيئية."},{"q":"أهم ما يميز الذكاء الانفعالي أنه يمكن اكتسابه وتعلمه.","c":true,"w":"أبرز ما يميز الذكاء الانفعالي إمكان اكتسابه وتعلّمه وتنميته."},{"q":"السلوك الفردي هو السلوك الذي يمارسه الإنسان لكي يتفادى ويتجنب السلوك المحبط ويساعد الفرد على تخفيض التوتر.","c":false,"w":"استبدال خادع؛ هذا تعريف السلوك الدفاعي لا السلوك الفردي."},{"q":"تساعد الاستدامة في التخفيف من آثار تغير المناخ وبناء مستقبل أكثر مرونة.","c":true,"w":"من فوائد الاستدامة التخفيف من آثار تغيّر المناخ وبناء مستقبل أكثر مرونة."},{"q":"الشفافية هي الالتزام بمجموعة المعايير الأخلاقية والقوانين والسلوكيات.","c":false,"w":"تلاعب لفظي؛ هذا تعريف النزاهة؛ أما الشفافية فهي الانفتاح حول القرارات والأنشطة المؤثرة في المجتمع والاقتصاد والبيئة."},{"q":"اتخاذ القرار عملية عقلية بالدرجة الأولى ويحتاج الكثير من الوقت والتأني.","c":true,"w":"اتخاذ القرار عملية عقلية/ذهنية تتطلب التروّي ودراسة البدائل."},{"q":"الافتقار إلى التنوع يعد من المعوقات التي تحد من فعالية أداء فرق العمل.","c":true,"w":"ضعف التنوّع في الخبرات والمهارات من معوقات فعالية الفريق."},{"q":"الاتصال غير الرسمي هو الذي يتم في المنظمات الإدارية ويكون خاضعًا للقواعد والقوانين والأنظمة المتبعة داخل المنظمات.","c":false,"w":"استبدال خادع؛ هذا تعريف الاتصال الرسمي؛ أما غير الرسمي فيقوم على الاعتبارات الشخصية ولا يخضع للقواعد والأنظمة."},{"q":"يتساوى إدراك العاملين للقرارات الإدارية المتخذة.","c":false,"w":"يختلف إدراك العاملين للقرارات باختلاف خصائصهم وخبراتهم وحاجاتهم (عوامل الفرد في الإدراك)."},{"q":"الحفاظ على تحقيق الاستدامة يتطلب تقييمًا لحجم الأثر للأنشطة البيئية فقط.","c":false,"w":"لفظة فقط تُبطل العبارة؛ فالاستدامة ثلاثية الركائز (اقتصادية واجتماعية وبيئية) ويُقيّم أثر الأنشطة في الأبعاد الثلاثة."},{"q":"يعد السلوك الفطري أحد أنواع السلوك الإنساني الذي يمارسه الإنسان منذ الصغر عن طريق التعلم والتدريب مثل القراءة والكتابة.","c":false,"w":"استبدال خادع؛ ما يُكتسب بالتعلم والتدريب (كالقراءة والكتابة) هو السلوك المكتسب، أما الفطري فبلا تعلّم (كالأكل والشرب)."},{"q":"تم بناء نموذج كارتر ورودجرز عام ٢٠٠٧ لتحقيق استدامة تعتمد على نهج تعاوني بين الأفراد.","c":false,"w":"تلاعب بالتاريخ؛ نموذج كارتر ورودجرز الثلاثي بُني عام ٢٠٠٨ لا ٢٠٠٧."},{"q":"التطوير التنظيمي يعد أحد وسائل بقاء المنظمات واستمراريتها.","c":true,"w":"التطوير التنظيمي من وسائل بقاء المنظمات واستمراريتها وحفظ حيويتها."},{"q":"مرحلة التكوين هي أصعب المراحل في بناء الفريق.","c":false,"w":"مرحلة التكوين مرحلة تعارف بدائية، والأصعب هي مرحلة الصراع (العصف)."},{"q":"تقتصر الاستدامة على المستوى البيئي.","c":false,"w":"الاستدامة لا تقتصر على البيئي بل تشمل الاقتصادي والاجتماعي أيضًا (ركائز ثلاث)."},{"q":"ظهرت أهمية الاستدامة في تقرير لجنة برونتلاند العالمية عام ١٩٧٧م.","c":false,"w":"تلاعب بالتاريخ؛ صدر التقرير عام ١٩٨٧ لا ١٩٧٧."},{"q":"يمثل السلوك الإنساني الأنشطة المتعددة التي يمارسها الإنسان في حياته وقد تكون ظاهرة كالإدراك والتفكير والتأمل.","c":false,"w":"تلاعب لفظي؛ الإدراك والتفكير والتأمل أنشطة باطنة لا ظاهرة؛ فالأنشطة الظاهرة كالحركة والكلام، والباطنة كالتفكير والتأمل."},{"q":"الاستدامة التنظيمية وفقًا لنموذج كارتر ورودجرز تتكون من مكونين أساسيين هما البيئة الطبيعية والمجتمع.","c":false,"w":"النموذج ثلاثي المكونات: البيئة الطبيعية والمجتمع والأداء الاقتصادي، لا مكونين."},{"q":"تعد مشاعر التأييد والولاء واللامبالاة من المؤشرات الكمية لقياس درجة الاستجابة لتنفيذ الرسالة.","c":false,"w":"تلاعب لفظي؛ هذه مؤشرات كيفية/نوعية لا كمية لقياس الاستجابة."},{"q":"تكامل ممارسات الاستدامة لدى أي مؤسسة يقلل من المخاطر القانونية مع السلطات التنظيمية.","c":true,"w":"تبنّي ممارسات الاستدامة يقلّل المخاطر القانونية والتنظيمية على المؤسسة."},{"q":"يعبر إبصار العين للمثيرات الخارجية عن الإدراك.","c":false,"w":"مجرد إبصار/رؤية المثير هو إحساس وليس إدراكًا؛ فالإدراك عملية عقلية يترتب عليها سلوك."},{"q":"تطوير المهارات يتطلب من الفرد أن يحسن من مهاراته دون اكتساب مهارات جديدة.","c":false,"w":"تطوير المهارات يشمل تحسين المهارات الحالية واكتساب مهارات جديدة معًا لا دون اكتساب مهارات جديدة."},{"q":"التكنولوجيا هي التأثير العلمي الحديث على طبيعة الحياة.","c":true,"w":"هذا تعريف التكنولوجيا ضمن مبادئ الاستدامة."},{"q":"الأصالة هي البعد الذي يكشف مدى صدق وإخلاص الفرد مع نفسه ومع الآخرين.","c":true,"w":"الأ��الة بُعد يكشف مدى صدق الفرد وإخلاصه مع نفسه ومع الآخرين."},{"q":"تساعد فرق العمل المدرسية على زيادة دافعية أفراد المدرسة للعمل.","c":true,"w":"من فوائد فرق العمل المدرسية رفع الدافعية والروح المعنوية للعاملين."},{"q":"الاستدامة هي التنمية التي تلبي احتياجات الجيل الحالي بغض النظر عن قدرة الأجيال القادمة على تلبية احتياجاتها الخاصة.","c":false,"w":"تلاعب لفظي؛ التعريف الصحيح (برونتلاند): تلبية احتياجات الحاضر دون الإخلال بقدرة الأجيال القادمة؛ وعبارة (بغض النظر) تقلب المعنى."},{"q":"التنمية المستدامة تمثل استراتيجية شاملة للحفاظ على البيئة وليس تحقيق التوازن البيئي.","c":false,"w":"التنمية المستدامة تستهدف تحقيق التوازن (بيئي واقتصادي واجتماعي)، فعبارة (وليس تحقيق التوازن البيئي) خاطئة."},{"q":"تتوقف فعالية الاتصالات غير الرسمية على مراعاة اتجاه خط السلطة حتى لا يتجاوز أحد الآخر.","c":false,"w":"استبدال خادع؛ مراعاة اتجاه خط السلطة شرط لفعالية الاتصالات الرسمية، أما غير الرسمية فلا تتقيّد بخط السلطة."},{"q":"الاستجابات التي تصدر عن الفرد نتيجة احتكاكه بغيره من الأفراد واتصاله بالبيئة الخارجية تعرف بالسلوك التنظيمي.","c":true,"w":"هذا هو تعريف السلوك التنظيمي."},{"q":"يعد الاتصال غاية أساسية للنجاح الوظيفي للمعلم.","c":false,"w":"تلاعب لفظي؛ الاتصال (وسيلة) أساسية للنجاح الوظيفي ��ا (غاية)."},{"q":"كلما كبر حجم الفريق زاد عدد الأعضاء الذين يستطيعون المشاركة بفعالية داخل الفريق.","c":false,"w":"كبر حجم الفريق يقلّل عدد القادرين على المشاركة بفعالية، والعكس صحيح."},{"q":"فرق العمل تعد من أمثلة جماعات العمل الرسمية.","c":true,"w":"فرق العمل = جماعة المهمة/الوظيفية، وهي من الجماعات الرسمية."},{"q":"التفكير المستدام لدى الفرد ليس من الضروري أن يؤدي إلى تنمية الابتكار لديه.","c":false,"w":"التفكير المستدام يرتبط بتنمية الابتكار والتفكير غير التقليدي."},{"q":"تطوير المهارات هو أن يكون الفرد على اطلاع دائم بالتطورات في مجاله المهني.","c":false,"w":"تطوير المهارات أشمل من مجرد الاطلاع الدائم؛ فهو تحسين المهارات الحالية واكتساب مهارات جديدة فعليًا."},{"q":"من فوائد التطوير التنظيمي تحسين مستوى الأداء.","c":true,"w":"رفع/تحسين مستوى الأداء من أسباب وفوائد التطوير التنظيمي."},{"q":"السلوك الجماعي هو السلوك الذي يمارسه الإنسان لكي يتفادى ويتجنب السلوك المحبط ويساعد الفرد على تخفيض التوتر.","c":false,"w":"استبدال خادع؛ هذا تعريف السلوك الدفاعي لا الجماعي."},{"q":"يتولى فريق القيادة المدرسية مسؤولية اختيار المناهج وتنفيذها.","c":false,"w":"اختيار المناهج شأن مركزي، ومسؤوليات فريق القيادة المدرسية تنصبّ على القيادة والتطوير والإصلاح لا اختيار المناهج."},{"q":"الحذر من الاغترار بالقدرات المكتسبة من أهم ما يجب أن يلتزم به القائد لتحقيق الثقة بالنفس.","c":true,"w":"الثقة بالنفس المتوازنة تستلزم الحذر من الاغترار بالقدرات."},{"q":"السلوك المحبط هو صورة من صور السلوك الإنساني يوضح علاقة الفرد بغيره من الأفراد الآخرين ويؤثر فيهم ويتأثر بهم.","c":false,"w":"استبدال خادع؛ هذا تعريف السلوك الجماعي لا المحبط؛ والسلوك المحبط هو وجود عائق يحول دون تحقيق الهدف."},{"q":"يعد التفكير التأملي أعلى مستويات التفكير.","c":false,"w":"استبدال خادع؛ أعلى مستويات التفكير هو التفكير ما وراء المعرفي لا التأملي."},{"q":"عدم وجود هيكل تنظيمي داخل المؤسسة لا يؤثر على فعالية عملية الاتصال.","c":false,"w":"عدم وجود/وضوح الهيكل التنظيمي من المعوقات التنظيمية التي تُضعف فعالية الاتصال."},{"q":"يعد السلوك المكتسب أحد أنواع السلوك الإنساني الذي يمارسه الإنسان منذ ولادته بدون تعلم أو تدريب مثل الأكل أو الشرب.","c":false,"w":"استبدال خادع؛ ما يُمارس منذ الولادة بلا تعلّم (كالأكل والشرب) هو السلوك الفطري لا المكتسب."},{"q":"تتكون مراحل العملية الإدراكية من ثلاث مراحل.","c":false,"w":"العملية الإدراكية تمرّ بعدّة مراحل/عمليات متتابعة تبدأ بالشعور وتنتهي بالسلوك، لا ثلاث مراحل فحسب."},{"q":"التنبؤ بسلوك العاملين ومن ثم التحكم في سلوكهم يعد من أهداف دراسة السلوك التنظيمي والاهتمام به.","c":true,"w":"التنبؤ والتحكم في سلوك العاملين من أهداف دراسة السلوك التنظيمي (إلى جانب الفهم)."},{"q":"الرؤية الواضحة والأهداف المشتركة من عوامل نجاح فرق العمل.","c":true,"w":"وضوح الرؤية والأهداف المشتركة من أهم عوامل نجاح فرق العمل."},{"q":"الثقة المتبادلة بين أعضاء الفريق تعزز التعاون وترفع الأداء.","c":true,"w":"الثقة المتبادلة تعزز التعاون وترفع أداء الفريق."},{"q":"تعد القدوة الحسنة من أساليب تنمية السلوك الأخلاقي.","c":true,"w":"القدوة الحسنة من أساليب تنمية السلوك الأخلاقي."},{"q":"التعاون والتنسيق بين أعضاء الفريق يرفع من كفاءة الأداء.","c":true,"w":"التعاون والتنسيق يرفعان كفاءة أداء الفريق."},{"q":"تسهم الاستدامة المهنية في تحسين جودة العملية التعليمية.","c":true,"w":"الاستدامة المهنية تسهم في تحسين جودة العملية التعليمية."},{"q":"الالتزام الأخلاقي من سمات المعلم المهني.","c":true,"w":"الالتزام الأخلاقي من سمات المعلم المهني والسلوك المهني القويم."},{"q":"التعلم المستمر من ركائز الاستدامة المهنية.","c":true,"w":"التعلم المستمر والتطوير الذاتي من ركائز الاستدامة المهنية."},{"q":"تعزيز روح الانتماء لدى العاملين يسهم في استدامة المؤسسة.","c":true,"w":"تعزيز روح الانتماء يدعم استدامة المؤسسة واستقرارها."},{"q":"التغذية الراجعة وسيلة مهمة لتحسين الأداء.","c":true,"w":"التغذية الراجعة من وسائل تحسين الأداء وتصحيح المسار."},{"q":"التواصل الفعّال عنصر أساسي في نجاح العمل الجماعي.","c":true,"w":"التواصل الفعّال ركيزة أساسية لنجاح فرق العمل."},{"q":"الاستدامة الاقتصادية تعني الاستخدام الأمثل للموارد.","c":true,"w":"الاستدامة الاقتصادية ترتبط بالاستخدام الأمثل والرشيد للموارد."},{"q":"العصف الذهني أحد أساليب توليد الأفكار داخل الفريق.","c":true,"w":"العصف الذهني أسلوب لتوليد الأفكار وحل المشكلات جماعيًا."},{"q":"المرونة في التعامل مع المتغيرات من سمات القائد الناجح.","c":true,"w":"المرونة والتكيّف مع المتغيرات من سمات القائد الناجح."},{"q":"التأمل الذاتي يساعد المعلم على تطوير ممارساته.","c":true,"w":"التأمل الذاتي يدعم تطوير الممارسات المهنية للمعلم."},{"q":"الإدارة الفعّالة للوقت من عوامل الاستدامة المهنية.","c":true,"w":"إدارة الوقت بفاعلية من عوامل دعم الاستدامة المهنية."},{"q":"تعد المحاباة والتحيز من السلوكيات المتوافقة مع أخلاقيات المهنة.","c":false,"w":"المحاباة والتحيز تتعارض مع أخلاقيات المهنة والعدالة والنزاهة."},{"q":"الاحترام المتبادل بين أعضاء الفريق يعزز العمل الجماعي.","c":true,"w":"الاحترام المتبادل يعزز روح العمل الجماعي وتماسك الفريق."},{"q":"تحمل المسؤولية من أخلاقيات المهنة.","c":true,"w":"تحمّل المسؤولية من أخلاقيات المهنة والسلوك المهني."},{"q":"المشاركة في اتخاذ القرار ترفع من دافعية العاملين.","c":true,"w":"إشراك العاملين في اتخاذ القرار يرفع دافعيتهم والتزامهم."},{"q":"العدالة والمساواة من أسس الاستدامة الاجتماعية.","c":true,"w":"العدالة والمساواة من أسس وركائز الاستدامة الاجتماعية."},{"q":"التحفيز المعنوي أكثر تأثيرًا في بعض الأحيان من التحفيز المادي.","c":true,"w":"التحفيز المعنوي قد يفوق المادي في أثره على الدافعية."},{"q":"التعاون بين المدرسة والمجتمع يدعم استدامة العملية التعليمية.","c":true,"w":"الشراكة بين المدرسة والمجتمع تدعم استدامة التعليم."},{"q":"القدرة على حل المشكلات من المهارات المهنية المهمة للمعلم.","c":true,"w":"مهارة حل المشكلات من المهارات المهنية المهمة للمعلم."},{"q":"التطوير المهني المستمر يسهم في رفع كفاءة المعلم.","c":true,"w":"التطوير المهني المستمر يرفع كفاءة المعلم وجودة أدائه."},{"q":"العمل الجماعي يقلل من الأعباء على الفرد الواحد.","c":true,"w":"العمل الجماعي يوزّع الأعباء ويخففها عن الفرد."},{"q":"الالتزام بالأنظمة والقوانين من مظاهر السلوك المهني السوي.","c":true,"w":"الالتزام بالأنظمة والقوانين من مظاهر السلوك المهني السوي."},{"q":"تنمية الاتجاهات الإيجابية نحو العمل تدعم الاستدامة المهنية.","c":true,"w":"الاتجاهات الإيجابية نحو العمل تدعم الاستدامة المهنية."},{"q":"التحلي بالصبر وضبط النفس من مهارات الذكاء الانفعالي.","c":true,"w":"ضبط النفس وإدارة الانفعالات من مهارات الذكاء الانفعالي."},{"q":"التخطيط الاستراتيجي يساعد المؤسسة على تحقيق استدامتها.","c":true,"w":"التخطيط الاستراتيجي يدعم تحقيق استدامة المؤسسة وأهدافها بعيدة المدى."}]
+};
+(function(){
+  'use strict';
+  var MCQ = (window.QUIZ && window.QUIZ.mcq) || [];
+  var TF  = (window.QUIZ && window.QUIZ.tf)  || [];
+
+  function shuffle(a){
+    a = a.slice();
+    for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+    return a;
+  }
+
+  // Build a normalized question list for a mode.
+  // type 'mcq' -> {type, q, opts:[{text,reason,correct}], }
+  // type 'tf'  -> {type, q, answer(bool), why}
+  function buildMcq(item){
+    var idx = item.o.map(function(_,i){return i;});
+    idx = shuffle(idx); // shuffle option order each entry
+    var opts = idx.map(function(origI){
+      return { text:item.o[origI], reason:item.w[origI], correct: origI===item.c };
+    });
+    return { type:'mcq', q:item.q, opts:opts };
+  }
+  function buildTf(item){
+    return { type:'tf', q:item.q, answer:item.c, why:item.w };
+  }
+
+  function buildDeck(mode){
+    // Questions stay in fixed source (notes) order. Only the OPTIONS get reshuffled
+    // each time (handled inside buildMcq), so question position never changes.
+    var deck=[];
+    if(mode==='mcq'||mode==='all'){ MCQ.forEach(function(m){deck.push(buildMcq(m));}); }
+    if(mode==='tf'||mode==='all'){ TF.forEach(function(t){deck.push(buildTf(t));}); }
+    return deck;
+  }
+
+  // ---- State ----
+  var state = { mode:null, deck:[], i:0, score:0, answered:false };
+
+  // ---- DOM refs ----
+  var elHome = document.getElementById('screen-home');
+  var elQuiz = document.getElementById('screen-quiz');
+  var elRes  = document.getElementById('screen-results');
+
+  function show(el){ [elHome,elQuiz,elRes].forEach(function(s){s.classList.add('hidden');}); el.classList.remove('hidden'); window.scrollTo(0,0); }
+
+  // ---- Home ----
+  Array.prototype.forEach.call(document.querySelectorAll('.yx-mode'), function(btn){
+    btn.addEventListener('click', function(){ startQuiz(btn.getAttribute('data-mode')); });
+  });
+
+  function startQuiz(mode){
+    state.mode = mode;
+    state.deck = buildDeck(mode); // reshuffles questions + options every entry
+    state.i = 0; state.score = 0; state.answered=false;
+    show(elQuiz);
+    renderQuestion();
+  }
+
+  // ---- Quiz render ----
+  function renderQuestion(){
+    state.answered = false;
+    var total = state.deck.length;
+    var item = state.deck[state.i];
+    document.getElementById('q-count').textContent = (state.i+1)+' / '+total;
+    document.getElementById('q-score').textContent = 'الدرجة: '+state.score;
+    document.getElementById('q-prog').style.width = ((state.i)/total*100)+'%';
+    var badge = item.type==='mcq' ? 'اختيار من متعدد' : 'صح أو خطأ';
+    document.getElementById('q-text').innerHTML = '<span class="num">['+badge+']</span><br>'+escapeHtml(item.q);
+
+    var optsWrap = document.getElementById('q-opts');
+    optsWrap.innerHTML='';
+    var fb = document.getElementById('q-fb'); fb.className='yx-fb'; fb.innerHTML='';
+    document.getElementById('btn-next').disabled = true;
+
+    if(item.type==='mcq'){
+      item.opts.forEach(function(o,i){
+        var b=document.createElement('button');
+        b.className='yx-opt'; b.type='button';
+        b.innerHTML='<span class="mk">'+letter(i)+'.</span> '+escapeHtml(o.text);
+        b.addEventListener('click', function(){ answerMcq(item,o,b); });
+        optsWrap.appendChild(b);
+      });
+    } else {
+      [{t:'صح',v:true},{t:'خطأ',v:false}].forEach(function(opt){
+        var b=document.createElement('button');
+        b.className='yx-opt'; b.type='button';
+        b.style.textAlign='center';
+        b.innerHTML='<span class="mk"></span>'+opt.t;
+        b.addEventListener('click', function(){ answerTf(item,opt.v,b); });
+        optsWrap.appendChild(b);
+      });
+    }
+  }
+
+  function lockOpts(){ Array.prototype.forEach.call(document.querySelectorAll('#q-opts .yx-opt'), function(b){b.disabled=true;}); }
+
+  function answerMcq(item,chosen,btn){
+    if(state.answered) return; state.answered=true; lockOpts();
+    var buttons = document.querySelectorAll('#q-opts .yx-opt');
+    item.opts.forEach(function(o,i){ if(o.correct) buttons[i].classList.add('correct'); });
+    var fb=document.getElementById('q-fb');
+    if(chosen.correct){
+      state.score++;
+      btn.classList.add('correct');
+      fb.className='yx-fb show ok';
+      fb.innerHTML='<span class="hd">\u2714 إجابة صحيحة</span>'+escapeHtml(chosen.reason);
+    } else {
+      btn.classList.add('wrong');
+      var correct = item.opts.filter(function(o){return o.correct;})[0];
+      fb.className='yx-fb show no';
+      fb.innerHTML='<span class="hd">\u2718 إجابة خاطئة</span>'+escapeHtml(chosen.reason)+
+        '<span class="corr">\u2714 الإجابة الصحيحة: '+escapeHtml(correct.text)+' \u2014 '+escapeHtml(correct.reason)+'</span>';
+    }
+    document.getElementById('q-score').textContent = 'الدرجة: '+state.score;
+    document.getElementById('btn-next').disabled=false;
+  }
+
+  function answerTf(item,val,btn){
+    if(state.answered) return; state.answered=true; lockOpts();
+    var buttons = document.querySelectorAll('#q-opts .yx-opt');
+    // buttons[0]=صح(true) buttons[1]=خطأ(false)
+    var correctBtn = item.answer ? buttons[0] : buttons[1];
+    correctBtn.classList.add('correct');
+    var fb=document.getElementById('q-fb');
+    var verdict = item.answer ? 'صح' : 'خطأ';
+    if(val===item.answer){
+      state.score++;
+      fb.className='yx-fb show ok';
+      fb.innerHTML='<span class="hd">\u2714 إجابة صحيحة (العبارة '+verdict+')</span>'+escapeHtml(item.why);
+    } else {
+      btn.classList.add('wrong');
+      fb.className='yx-fb show no';
+      fb.innerHTML='<span class="hd">\u2718 إجابة خاطئة</span><span class="corr">\u2714 العبارة الصحيحة: '+verdict+'</span>'+escapeHtml(item.why);
+    }
+    document.getElementById('q-score').textContent = 'الدرجة: '+state.score;
+    document.getElementById('btn-next').disabled=false;
+  }
+
+  document.getElementById('btn-next').addEventListener('click', function(){
+    if(!state.answered) return;
+    state.i++;
+    if(state.i>=state.deck.length){ finish(); } else { renderQuestion(); }
+  });
+  document.getElementById('btn-quit').addEventListener('click', function(){ show(elHome); });
+
+  function finish(){
+    var total=state.deck.length;
+    var pct=Math.round(state.score/total*100);
+    document.getElementById('res-score').textContent = state.score+' / '+total;
+    document.getElementById('res-pct').textContent = pct+'%';
+    var msg = pct>=85?'ممتاز! أداء متميز \uD83C\uDFC6':pct>=70?'جيد جدًا، واصل التقدم \uD83D\uDC4F':pct>=50?'جيد، يحتاج لمزيد من المراجعة \uD83D\uDCDA':'يحتاج إلى مراجعة المادة العلمية جيدًا \uD83D\uDCD6';
+    document.getElementById('res-msg').textContent = msg;
+    document.getElementById('q-prog').style.width='100%';
+    show(elRes);
+  }
+  // Restart reshuffles (same mode) -> new option/question order
+  document.getElementById('btn-retry').addEventListener('click', function(){ startQuiz(state.mode); });
+  document.getElementById('btn-home').addEventListener('click', function(){ show(elHome); });
+
+  function letter(i){ return ['أ','ب','ج','د','هـ'][i]||(i+1); }
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // counts on home
+  var cm=document.getElementById('cnt-mcq'); if(cm) cm.textContent=MCQ.length+' سؤال';
+  var ct=document.getElementById('cnt-tf'); if(ct) ct.textContent=TF.length+' عبارة';
+  var ca=document.getElementById('cnt-all'); if(ca) ca.textContent=(MCQ.length+TF.length)+' سؤال';
+})();
+
+</script>
+</body>
+</html>
